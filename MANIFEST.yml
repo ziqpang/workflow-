@@ -1,0 +1,11 @@
+type: Workflow
+version: 1.0.0
+main:
+    id: 7613323463902281766
+    name: X7_W_red_word_1
+    desc: 提取小红书视频笔记内容进行仿写和润色存入飞书文档
+    icon: plugin_icon/workflow.png
+    version: ""
+    flowMode: 0
+    commitId: ""
+sub: []

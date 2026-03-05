@@ -1,0 +1,832 @@
+schema_version: 1.0.0
+name: X7_W_red_word_1
+id: 7613323463902281766
+description: "提取小红书视频笔记内容进行仿写和润色存入飞书文档"
+mode: workflow
+icon: plugin_icon/workflow.png
+nodes:
+    - id: "100001"
+      type: start
+      title: 开始
+      icon: https://lf3-static.bytednsdoc.com/obj/eden-cn/dvsmryvd_avi_dvsm/ljhwZthlaukjlkulzlp/icon/icon-Start-v2.jpg
+      description: "工作流的起始节点，用于设定启动工作流需要的信息"
+      position:
+        x: -1646.234061541531
+        y: 299.1137445123751
+      parameters:
+        node_outputs:
+            api_key:
+                type: string
+                required: true
+                value: null
+                description: '获取方式: https://api.shuidi.tech/'
+            folder_token:
+                type: string
+                required: true
+                value: null
+            share_link:
+                type: string
+                required: true
+                value: null
+    - id: "900001"
+      type: end
+      title: 结束
+      icon: https://lf3-static.bytednsdoc.com/obj/eden-cn/dvsmryvd_avi_dvsm/ljhwZthlaukjlkulzlp/icon/icon-End-v2.jpg
+      description: "工作流的最终节点，用于返回工作流运行后的结果信息"
+      position:
+        x: 2988.42878219904
+        y: 299.1137445123751
+      parameters:
+        node_inputs:
+            - name: output
+              input:
+                type: string
+                value:
+                    path: data.url
+                    ref_node: "142836"
+        terminatePlan: returnVariables
+    - id: "617565"
+      type: condition
+      title: 选择器
+      icon: https://lf3-static.bytednsdoc.com/obj/eden-cn/dvsmryvd_avi_dvsm/ljhwZthlaukjlkulzlp/icon/icon-Condition-v2.jpg
+      description: "连接多个下游分支，若设定的条件成立则仅运行对应的分支，若均不成立则只运行“否则”分支"
+      position:
+        x: -709.7436754535445
+        y: 260.1137445123751
+      parameters:
+        branches:
+            - condition:
+                conditions:
+                    - left:
+                        input:
+                            type: integer
+                            value:
+                                path: code
+                                ref_node: "132046"
+                      operator: 1
+                      right:
+                        input:
+                            type: integer
+                            value: 0
+                logic: 1
+    - id: "142836"
+      type: plugin
+      title: create_document
+      icon: https://lf3-static.bytednsdoc.com/obj/eden-cn/dvsmryvd_avi_dvsm/ljhwZthlaukjlkulzlp/icon/icon-Plugin-v2.jpg
+      description: "创建文档，支持创建空文档和带内容的文档，支持 markdown 语法创建。"
+      position:
+        x: 2510.2563245464557
+        y: 166.1637445123751
+      parameters:
+        apiParam:
+            - name: apiID
+              input:
+                type: string
+                value: "7395047785122414619"
+            - name: apiName
+              input:
+                type: string
+                value: "create_document"
+            - name: pluginID
+              input:
+                type: string
+                value: "7395047785122398235"
+            - name: pluginName
+              input:
+                type: string
+                value: "飞书云文档"
+            - name: pluginVersion
+              input:
+                type: string
+                value: ""
+            - name: tips
+              input:
+                type: string
+                value: ""
+            - name: outDocLink
+              input:
+                type: string
+                value: ""
+            - name: pluginAuthMode
+              input:
+                type: integer
+                value: 0
+        inputDefs:
+            - description: 文档内容，支持 markdown 语法，可以为空。
+              input: {}
+              name: content
+              required: false
+              type: string
+            - description: 指定文档所在文件夹 的 Token，不传或传空表示根目录。支持输入文件夹 token 或者 文件夹 URL。
+              input: {}
+              name: folder_token
+              required: false
+              type: string
+            - description: 文档标题，只支持纯文本。
+              input: {}
+              name: title
+              required: false
+              type: string
+        node_inputs:
+            - name: content
+              input:
+                type: string
+                value:
+                    path: output
+                    ref_node: "154895"
+            - name: folder_token
+              input:
+                value:
+                    path: folder_token
+                    ref_node: "100001"
+            - name: title
+              input:
+                type: string
+                value:
+                    path: output
+                    ref_node: "151907"
+        node_outputs:
+            code:
+                type: float
+                value: null
+                description: 错误码，非 0 表示失败。
+            data:
+                type: object
+                properties:
+                    title:
+                        type: string
+                        value: null
+                        description: 文档标题
+                    token:
+                        type: string
+                        value: null
+                        description: 文档唯一标识
+                    type:
+                        type: string
+                        value: null
+                        description: 文档类型
+                    url:
+                        type: string
+                        value: null
+                        description: 文档链接
+                value: null
+                description: 返回结果
+            log_id:
+                type: string
+                value: null
+                description: 链路追踪 id
+            msg:
+                type: string
+                value: null
+                description: 错误描述
+        settingOnError:
+            processType: 1
+            retryTimes: 0
+            timeoutMs: 180000
+    - id: "122878"
+      type: comment
+      title: ""
+      icon: ""
+      description: ""
+      position:
+        x: 2971.7563245464557
+        y: 481.0637445123751
+      size:
+        width: 362.9756518996718
+        height: 140.12604254820153
+      parameters:
+        note: '[{"type":"heading-three","children":[{"text":"输出说明","type":"text"}]},{"type":"paragraph","children":[{"text":"输出的是文档的链接，打开即可看到工作流执行结果","type":"text"}]}]'
+        schemaType: slate
+    - id: "279783"
+      type: plugin
+      title: 视频解析失败或该链接无视频
+      icon: https://p26-flow-product-sign.byteimg.com/tos-cn-i-13w3uml6bg/d059b0cf678d495f90201cf6f030256c~tplv-13w3uml6bg-resize:128:128.image?rk3s=2e2596fd&x-expires=1745082437&x-signature=Id8C2makoDBeyc8%2Fx%2BcyvjU%2F8nI%3D
+      description: "抛出错误"
+      position:
+        x: 2510.2563245464557
+        y: 438.5387445123751
+      parameters:
+        apiParam:
+            - name: apiID
+              input:
+                type: string
+                value: "7483526971092516875"
+            - name: apiName
+              input:
+                type: string
+                value: "throwError"
+            - name: pluginID
+              input:
+                type: string
+                value: "7483526971092500491"
+            - name: pluginName
+              input:
+                type: string
+                value: "抛出错误"
+            - name: pluginVersion
+              input:
+                type: string
+                value: ""
+            - name: tips
+              input:
+                type: string
+                value: ""
+            - name: outDocLink
+              input:
+                type: string
+                value: ""
+        inputDefs:
+            - description: 错误信息
+              input: {}
+              name: error_message
+              required: false
+              type: string
+        node_inputs:
+            - name: error_message
+              input:
+                type: string
+                value: "视频解析失败或该链接无视频"
+        node_outputs:
+            error_message:
+                type: string
+                required: true
+                value: null
+                description: 错误信息
+            prompt:
+                type: string
+                required: true
+                value: null
+                description: 提示
+        settingOnError:
+            processType: 1
+            retryTimes: 0
+            timeoutMs: 180000
+    - id: "163273"
+      type: plugin
+      title: voice_to_text
+      icon: https://p26-flow-product-sign.byteimg.com/tos-cn-i-13w3uml6bg/18035a11c12a4891a73e67fe8f4f45e7~tplv-13w3uml6bg-resize:128:128.image?rk3s=2e2596fd&x-expires=1747644236&x-signature=e24Vum3C0KberQJVQhEyLxLElms%3D
+      description: "视频、语音转文字"
+      position:
+        x: -249.74367545354454
+        y: 166.1637445123751
+      parameters:
+        apiParam:
+            - name: apiID
+              input:
+                type: string
+                value: "7492817685936455720"
+            - name: apiName
+              input:
+                type: string
+                value: "voice_to_text"
+            - name: pluginID
+              input:
+                type: string
+                value: "7492817685936439336"
+            - name: pluginName
+              input:
+                type: string
+                value: "视频文案提取"
+            - name: pluginVersion
+              input:
+                type: string
+                value: ""
+            - name: tips
+              input:
+                type: string
+                value: ""
+            - name: outDocLink
+              input:
+                type: string
+                value: ""
+        node_inputs:
+            - name: api_key
+              input:
+                value:
+                    path: api_key
+                    ref_node: "100001"
+            - name: file_url
+              input:
+                type: string
+                value:
+                    path: data.video
+                    ref_node: "132046"
+        node_outputs:
+            data:
+                type: string
+                required: true
+                value: null
+                description: data
+            error_message:
+                type: string
+                required: true
+                value: null
+                description: error_message
+        settingOnError:
+            processType: 1
+            retryTimes: 0
+            timeoutMs: 180000
+    - id: "164432"
+      type: text
+      title: 文本处理
+      icon: https://lf3-static.bytednsdoc.com/obj/eden-cn/dvsmryvd_avi_dvsm/ljhwZthlaukjlkulzlp/icon/icon-StrConcat-v2.jpg
+      description: "用于处理多个字符串类型变量的格式"
+      position:
+        x: 670.2563245464555
+        y: 166.1637445123751
+      parameters:
+        concatParams:
+            - name: concatResult
+              input:
+                type: string
+                value: "# 小红书风格短视频内容创作专家\n\n## 角色(Role):\n你是一位深谙小红书平台规则的内容创作专家，擅长将普通文案转化为充满\"种草\"感、亲和力和真实性的小红书风格笔记。你了解小红书用户的喜好，善于创造生动、情感化且极具分享性的内容。\n\n## 背景(Background):\n小红书作为国内领先的生活方式分享社区，其笔记风格独特而鲜明，特点是情感真挚、亲和力强、表达方式接地气，常带有强烈的个人体验感和推荐意愿。优质的小红书笔记往往通过标题吸引眼球，用生动具体的文字和emoji表情符号展现个人经历，并在分享中融入实用价值和情感共鸣。\n\n## 任务(Task):\n1. 将用户提供的原始文案转化为地道的小红书风格笔记，保留核心信息的同时，注入小红书特有的口吻和表达方式。\n2. 创建一个符合小红书平台特色的标题，吸引用户点击并阅读全文。\n3. 恰当地运用emoji表情符号，增强情感表达和视觉吸引力。\n\n## 输出格式(Output format):\n{\n    \"title\": \"标题 #标签1 #标签2 #标签3\",\n    \"content\": \"润色后的文案（内容中的双引号需要转义为\\\\\\\"）\"\n}\n\n注意：\n1. 内容中的所有双引号(\")必须转义为(\\\\\")\n2. 内容中的所有反斜杠(\\\\)必须转义为(\\\\\\\\)\n3. 内容中的所有制表符必须转义为(\\\\t)\n4. 内容中的所有换行符必须转义为(\\\\n)\n5. 不要使用代码块包裹，确保最终输出的是有效的JSON格式，可以被JSON解析器正确解析\n\n## 写作原则(Writing Principles):\n1. **个人化叙述**：使用第一人称，以个人体验和感受为主线\n2. **真诚种草感**：表达自然的推荐欲，带有\"不得不分享\"的热情\n3. **口语化表达**：使用日常对话式语言，包含语气词和口头禅\n4. **具体而微**：提供具体细节和感受，避免空泛表达\n5. **情感丰富**：表现明显的情绪起伏，如惊喜、感动、震撼等\n6. **价值导向**：确保内容中包含实用信息或有启发性的观点\n7. **emoji点缀**：适量使用表情符号增强表达，但避免过度使用\n\n## 小红书特色表达方式:\n1. **感叹式开场**：如\"天啊！终于找到了！\"、\"姐妹们看过来！\"\n2. **亲密称谓**：如\"姐妹们\"、\"宝子们\"、\"盆友们\"\n3. **强调词**：频繁使用\"真的\"、\"真心\"、\"实在是\"等增强语气\n4. **小红书热词**：融入\"yyds\"、\"绝绝子\"、\"skr\"、\"太可了\"等流行语\n5. **问句互动**：如\"有和我一样的吗？\"、\"你们想不想知道？\"\n6. **分享感**：如\"必须安利给大家\"、\"不分享简直对不起自己\"\n7. **标记式总结**：如\"收藏➕转发\"、\"学会了吗？\"\n\n## 初始化(Initialization):\n准备好接收用户的原始文案，将直接输出一个充满小红书风格的内容（以JSON格式呈现，不使用代码块包裹，包含标题和正文），不会添加任何额外解释。"
+            - name: arrayItemConcatChar
+              input:
+                type: string
+                value: "，"
+            - name: allArrayItemConcatChars
+              input:
+                type: list
+                items:
+                    type: object
+                    value: null
+                value:
+                    - isDefault: true
+                      label: "换行"
+                      value: "\n"
+                    - isDefault: true
+                      label: "制表符"
+                      value: "\t"
+                    - isDefault: true
+                      label: "句号"
+                      value: "。"
+                    - isDefault: true
+                      label: "逗号"
+                      value: "，"
+                    - isDefault: true
+                      label: "分号"
+                      value: "；"
+                    - isDefault: true
+                      label: "空格"
+                      value: " "
+        method: concat
+        node_outputs:
+            output:
+                type: string
+                required: true
+                value: null
+    - id: "102197"
+      type: plugin
+      title: llm
+      icon: https://p6-flow-product-sign.byteimg.com/tos-cn-i-13w3uml6bg/c56bdd247c154e3594f5594887744051~tplv-13w3uml6bg-resize:128:128.image?rk3s=2e2596fd&x-expires=1747644706&x-signature=uXqWrg3uHWtsUc0TrWteur5dcdQ%3D
+      description: "POST /stream"
+      position:
+        x: 1130.2563245464555
+        y: 166.1637445123751
+      parameters:
+        apiParam:
+            - name: apiID
+              input:
+                type: string
+                value: "7493966683858714678"
+            - name: apiName
+              input:
+                type: string
+                value: "wujie"
+            - name: pluginID
+              input:
+                type: string
+                value: "7493966683858698294"
+            - name: pluginName
+              input:
+                type: string
+                value: "全球大模型"
+            - name: pluginVersion
+              input:
+                type: string
+                value: ""
+            - name: tips
+              input:
+                type: string
+                value: ""
+            - name: outDocLink
+              input:
+                type: string
+                value: ""
+        node_inputs:
+            - name: api_key
+              input:
+                value:
+                    path: api_key
+                    ref_node: "100001"
+            - name: model
+              input:
+                type: string
+                value: "claude-3-7-sonnet-20250219"
+            - name: user_prompt
+              input:
+                type: string
+                value:
+                    path: output
+                    ref_node: "111182"
+            - name: system_prompt
+              input:
+                value:
+                    path: output
+                    ref_node: "164432"
+        node_outputs:
+            output:
+                type: string
+                value: null
+                description: 流式输出内容
+        settingOnError:
+            processType: 1
+            retryTimes: 0
+            timeoutMs: 180000
+    - id: "111182"
+      type: plugin
+      title: content_check
+      icon: https://p26-flow-product-sign.byteimg.com/tos-cn-i-13w3uml6bg/903237a10391450abcb06d42d7713f13~tplv-13w3uml6bg-resize:128:128.image?rk3s=2e2596fd&x-expires=1747644742&x-signature=m9pWdW4myltnI50HoQ9jiaS3bAY%3D
+      description: "POST /stream"
+      position:
+        x: 210.25632454645546
+        y: 166.1637445123751
+      parameters:
+        apiParam:
+            - name: apiID
+              input:
+                type: string
+                value: "7494153937088725027"
+            - name: apiName
+              input:
+                type: string
+                value: "content_check"
+            - name: pluginID
+              input:
+                type: string
+                value: "7494153937088708643"
+            - name: pluginName
+              input:
+                type: string
+                value: "文案校对"
+            - name: pluginVersion
+              input:
+                type: string
+                value: ""
+            - name: tips
+              input:
+                type: string
+                value: ""
+            - name: outDocLink
+              input:
+                type: string
+                value: ""
+        node_inputs:
+            - name: api_key
+              input:
+                value:
+                    path: api_key
+                    ref_node: "100001"
+            - name: user_prompt
+              input:
+                value:
+                    path: data
+                    ref_node: "163273"
+        node_outputs:
+            output:
+                type: string
+                value: null
+                description: 流式输出内容
+        settingOnError:
+            processType: 1
+            retryTimes: 0
+            timeoutMs: 180000
+    - id: "154895"
+      type: code
+      title: 代码
+      icon: https://lf3-static.bytednsdoc.com/obj/eden-cn/dvsmryvd_avi_dvsm/ljhwZthlaukjlkulzlp/icon/icon-Code-v2.jpg
+      description: "编写代码，处理输入变量来生成返回值"
+      version: v2
+      position:
+        x: 2050.2563245464553
+        y: 59.213744512375115
+      parameters:
+        code: "/**\n * @author wx: shuidi_tech\n */\n// 在这里，您可以通过 ‘params’  获取节点中的输入变量，并通过 'ret' 输出结果\n// 'params' 和 'ret' 已经被正确地注入到环境中\n// 下面是一个示例，获取节点输入中参数名为‘input’的值：\n// const input = params.input; \n// 下面是一个示例，输出一个包含多种数据类型的 'ret' 对象：\n// const ret = { \"name\": ‘小明’, \"hobbies\": [“看书”, “旅游”] };\n\nasync function main({ params }: Args): Promise<Output> {\n    let input: string;\n\n    try {\n        const obj = JSON.parse(params.input);\n\n        input = `## 标题\n\n${obj?.title}\n\n---\n\n## 内容\n\n${obj?.content}`\n    } catch {\n        input = `## 格式转换失败，以下是大模型直出的原文\n${params.input}`\n    }\n\n    return {\n        output: input\n    }\n}"
+        language: 5
+        node_inputs:
+            - name: input
+              input:
+                value:
+                    path: output
+                    ref_node: "102197"
+        node_outputs:
+            output:
+                type: string
+                value: null
+        settingOnError:
+            processType: 1
+            retryTimes: 0
+            switch: false
+            timeoutMs: 60000
+    - id: "158963"
+      type: plugin
+      title: datetime
+      icon: https://p9-flow-product-sign.byteimg.com/tos-cn-i-13w3uml6bg/10ff1be4f2d94bb0a97c0a002b84d10e~tplv-13w3uml6bg-resize:128:128.image?rk3s=2e2596fd&x-expires=1745155726&x-signature=nDls0ezWNuK0YS%2B6gITIAe8%2BwhQ%3D
+      description: "获取各种格式的日期和时间"
+      position:
+        x: 1590.2563245464555
+        y: 273.1137445123751
+      parameters:
+        apiParam:
+            - name: apiID
+              input:
+                type: string
+                value: "7484140117972631586"
+            - name: apiName
+              input:
+                type: string
+                value: "datetime"
+            - name: pluginID
+              input:
+                type: string
+                value: "7484140117972615202"
+            - name: pluginName
+              input:
+                type: string
+                value: "日期时间"
+            - name: pluginVersion
+              input:
+                type: string
+                value: ""
+            - name: tips
+              input:
+                type: string
+                value: ""
+            - name: outDocLink
+              input:
+                type: string
+                value: ""
+        inputDefs:
+            - description: 如果你想指定日期和时间，请填入当前日期和时间，否则就是当前的日期时间
+              input: {}
+              name: datetime
+              required: false
+              type: string
+        node_outputs:
+            date:
+                type: float
+                required: true
+                value: null
+                description: 日
+            dateOnly:
+                type: string
+                required: true
+                value: null
+                description: 仅日期
+            dateTime:
+                type: string
+                required: true
+                value: null
+                description: 标准时间格式
+            filenameFriendly:
+                type: string
+                required: true
+                value: null
+                description: 文件名友好格式
+            hour:
+                type: float
+                required: true
+                value: null
+                description: 时
+            millisecond:
+                type: float
+                required: true
+                value: null
+                description: 毫秒
+            minute:
+                type: float
+                required: true
+                value: null
+                description: 分
+            month:
+                type: float
+                required: true
+                value: null
+                description: 月
+            prompt:
+                type: string
+                required: true
+                value: null
+                description: 提示
+            second:
+                type: float
+                required: true
+                value: null
+                description: 秒
+            timeOnly:
+                type: string
+                required: true
+                value: null
+                description: 仅时间
+            timestamp:
+                type: integer
+                required: true
+                value: null
+                description: 时间戳
+            year:
+                type: float
+                required: true
+                value: null
+                description: 年
+        settingOnError:
+            processType: 1
+            retryTimes: 0
+            timeoutMs: 180000
+    - id: "151907"
+      type: text
+      title: 文件名称
+      icon: https://lf3-static.bytednsdoc.com/obj/eden-cn/dvsmryvd_avi_dvsm/ljhwZthlaukjlkulzlp/icon/icon-StrConcat-v2.jpg
+      description: "用于处理多个字符串类型变量的格式"
+      position:
+        x: 2050.2563245464553
+        y: 273.1137445123751
+      parameters:
+        concatParams:
+            - name: concatResult
+              input:
+                type: string
+                value: "W0008-{{String1}}"
+            - name: arrayItemConcatChar
+              input:
+                type: string
+                value: "，"
+            - name: allArrayItemConcatChars
+              input:
+                type: list
+                items:
+                    type: object
+                    value: null
+                value:
+                    - isDefault: true
+                      label: "换行"
+                      value: "\n"
+                    - isDefault: true
+                      label: "制表符"
+                      value: "\t"
+                    - isDefault: true
+                      label: "句号"
+                      value: "。"
+                    - isDefault: true
+                      label: "逗号"
+                      value: "，"
+                    - isDefault: true
+                      label: "分号"
+                      value: "；"
+                    - isDefault: true
+                      label: "空格"
+                      value: " "
+        method: concat
+        node_inputs:
+            - name: String1
+              input:
+                value:
+                    path: dateTime
+                    ref_node: "158963"
+        node_outputs:
+            output:
+                type: string
+                required: true
+                value: null
+    - id: "140199"
+      type: comment
+      title: ""
+      icon: ""
+      description: ""
+      position:
+        x: -1633.8936754535443
+        y: 468.0637445123751
+      size:
+        width: 368.2813662911369
+        height: 151.97879912862524
+      parameters:
+        note: '[{"type":"heading-three","children":[{"text":"参数说明","type":"text"}]},{"type":"bulleted-list","children":[{"type":"list-item","children":[{"text":"share_link：输入视频分享链接（","type":"text"},{"type":"text","text":"获取方式","link":"https://ai-for-everyone.feishu.cn/wiki/E5GfweCUzis5lJkRwcrcR2ABn2d#share-MJ3mdgKgfoYPs1xH1ZockDcinvg"},{"type":"text","text":"）"}]},{"type":"list-item","children":[{"text":"api_key：获取地址：","type":"text"},{"type":"text","text":"https://api.shuidi.tech/","link":"https://api.shuidi.tech/token"}]}]},{"type":"bulleted-list","children":[{"type":"list-item","children":[{"text":"folder_token：飞书文件夹链接（","type":"text"},{"type":"text","text":"获取方式","link":"https://ai-for-everyone.feishu.cn/wiki/E5GfweCUzis5lJkRwcrcR2ABn2d#share-BrDDdzo8XoeWi7xpKGbczMdxnDe"},{"type":"text","text":"）"}]}]}]'
+        schemaType: slate
+    - id: "132046"
+      type: plugin
+      title: parse_video
+      icon: https://lf3-static.bytednsdoc.com/obj/eden-cn/dvsmryvd_avi_dvsm/ljhwZthlaukjlkulzlp/icon/icon-Plugin-v2.jpg
+      description: "视频解析"
+      position:
+        x: -1169.7436754535445
+        y: 273.1137445123751
+      parameters:
+        apiParam:
+            - name: apiID
+              input:
+                type: string
+                value: "7493172141890928691"
+            - name: apiName
+              input:
+                type: string
+                value: "parse_video"
+            - name: pluginID
+              input:
+                type: string
+                value: "7493172141890912307"
+            - name: pluginName
+              input:
+                type: string
+                value: "视频解析"
+            - name: pluginVersion
+              input:
+                type: string
+                value: ""
+            - name: tips
+              input:
+                type: string
+                value: ""
+            - name: outDocLink
+              input:
+                type: string
+                value: ""
+        node_inputs:
+            - name: api_key
+              input:
+                value:
+                    path: api_key
+                    ref_node: "100001"
+            - name: share_link
+              input:
+                value:
+                    path: share_link
+                    ref_node: "100001"
+        node_outputs:
+            code:
+                type: integer
+                required: true
+                value: null
+                description: 状态码；0成功
+            data:
+                type: object
+                properties:
+                    cover:
+                        type: string
+                        required: true
+                        value: null
+                        description: 封面
+                    title:
+                        type: string
+                        required: true
+                        value: null
+                        description: 标题
+                    video:
+                        type: string
+                        required: true
+                        value: null
+                        description: 视频资源地址
+                value: null
+            message:
+                type: string
+                required: true
+                value: null
+                description: 执行信息
+            prompt:
+                type: string
+                required: true
+                value: null
+                description: 提示
+        settingOnError:
+            processType: 1
+            retryTimes: 0
+            timeoutMs: 180000
+edges:
+    - source_node: "100001"
+      target_node: "132046"
+    - source_node: "142836"
+      target_node: "900001"
+    - source_node: "279783"
+      target_node: "900001"
+    - source_node: "132046"
+      target_node: "617565"
+    - source_node: "617565"
+      target_node: "279783"
+      source_port: "false"
+    - source_node: "617565"
+      target_node: "163273"
+      source_port: "true"
+    - source_node: "154895"
+      target_node: "142836"
+    - source_node: "151907"
+      target_node: "142836"
+    - source_node: "163273"
+      target_node: "111182"
+    - source_node: "111182"
+      target_node: "164432"
+    - source_node: "164432"
+      target_node: "102197"
+    - source_node: "102197"
+      target_node: "154895"
+    - source_node: "102197"
+      target_node: "158963"
+    - source_node: "158963"
+      target_node: "151907"
