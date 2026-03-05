@@ -4,23 +4,10 @@
 
 ## 效果展示
 
-### 1. 试运行输入
-
-在「开始」节点中填写 api_key、folder_token、小红书分享链接等参数后即可试运行。
-
-![试运行输入](images/trial-run-input.png)
-
-### 2. 原始视频截图
-
-待处理的小红书视频/笔记页面示意。
-
-![原始视频截图](images/original-video.png)
-
-### 3. 生成文档截图
-
-工作流执行完成后，在飞书中生成的仿写/润色文档效果。
-
-![生成文档截图](images/generated-doc.png)
+| 试运行输入 | 原始视频截图 | 生成文档截图 |
+| :---: | :---: | :---: |
+| 在「开始」节点填写 api_key、folder_token、分享链接后试运行 | 待处理的小红书视频/笔记页面 | 飞书中生成的仿写/润色文档 |
+| ![试运行输入](images/trial-run-input.png) | ![原始视频截图](images/original-video.png) | ![生成文档截图](images/generated-doc.png) |
 
 ## 项目说明
 
